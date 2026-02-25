@@ -56,8 +56,10 @@ class IonosPricingAPI:
         account-specific information, not a public catalog.
         """
         try:
-            result: List[Dict[str, Any]] = self._make_request("locations")
-            return result
+            response = self._make_request("locations")
+            if isinstance(response, list):
+                return response
+            return []
         except IonosAPIError:
             # Fallback to known locations
             fallback: List[Dict[str, Any]] = [
