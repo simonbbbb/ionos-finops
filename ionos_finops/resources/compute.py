@@ -39,8 +39,10 @@ class IonosCube(Resource):
     def calculate_cost(self) -> Dict[str, Any]:
         template_id = self.config.get("template_uuid", "")
 
-        cube_pricing = self.pricing.get("cube_templates", {})
+        cube_pricing: Dict[str, Any] = self.pricing.get("cube_templates", {})
         template_cost = cube_pricing.get(template_id, {})
+        if not isinstance(template_cost, dict):
+            template_cost = {}
 
         hourly_cost = template_cost.get("hourly", 0.0)
         monthly_cost = hourly_cost * 730

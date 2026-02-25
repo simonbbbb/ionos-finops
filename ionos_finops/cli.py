@@ -2,7 +2,7 @@ import click
 import json
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any, Dict
 import yaml
 
 from ionos_finops.pricing.calculator import CostCalculator
@@ -187,12 +187,16 @@ def scheduler(api_token: Optional[str], interval: int, status: bool, stop: bool)
         sys.exit(1)
 
 
-def _load_config(config_path: str) -> dict:
+def _load_config(config_path: str) -> Dict[str, Any]:
     with open(config_path, "r", encoding="utf-8") as f:
         if config_path.endswith(".json"):
-            return json.load(f)
+            result: Dict[str, Any] = json.load(f)
+            return result
         elif config_path.endswith((".yml", ".yaml")):
-            return yaml.safe_load(f)
+            yaml_result = yaml.safe_load(f)
+            if isinstance(yaml_result, dict):
+                return yaml_result
+            return {}
         else:
             raise ValueError("Config file must be JSON or YAML")
 

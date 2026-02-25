@@ -19,18 +19,23 @@ class Resource(ABC):
 
     def get_hourly_cost(self) -> float:
         cost = self.calculate_cost()
-        return cost.get("hourly", 0.0)
+        hourly = cost.get("hourly", 0.0)
+        return float(hourly)
 
     def get_monthly_cost(self) -> float:
         cost = self.calculate_cost()
-        return cost.get("monthly", 0.0)
+        monthly = cost.get("monthly", 0.0)
+        return float(monthly)
 
     def get_yearly_cost(self) -> float:
         return self.get_monthly_cost() * 12
 
     def get_cost_breakdown(self) -> Dict[str, float]:
         cost = self.calculate_cost()
-        return cost.get("breakdown", {})
+        breakdown = cost.get("breakdown", {})
+        if not isinstance(breakdown, dict):
+            return {}
+        return breakdown
 
     def to_dict(self) -> Dict[str, Any]:
         return {

@@ -22,6 +22,8 @@ class TerraformParser:
                 return self._parse_plan_file()
             elif self.path.suffix == ".tf":
                 return self._parse_tf_file(self.path)
+            else:
+                raise ValueError(f"Unsupported file type: {self.path.suffix}")
         elif self.path.is_dir():
             return self._parse_directory()
         else:
