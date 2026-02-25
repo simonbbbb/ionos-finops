@@ -1,0 +1,47 @@
+# IONOS FinOps Configuration Example
+# Copy this file to .ionos-finops.yml and customize
+
+# Default region for cost calculations
+default_region: de/fra
+
+# Currency for cost display
+currency: EUR
+
+# Pricing cache TTL in hours
+pricing_cache_ttl: 24
+
+# IONOS API configuration (optional, for real-time pricing)
+api_url: https://api.ionos.com/cloudapi/v6
+api_token: ${IONOS_TOKEN}
+
+# Custom pricing overrides (optional)
+# Use this to override default pricing with your contract rates
+custom_pricing:
+  compute:
+    vcpu_hourly: 0.01
+    ram_gb_hourly: 0.005
+  
+  storage:
+    storage_hdd_gb_hourly: 0.00005
+    storage_ssd_gb_hourly: 0.0001
+    storage_ssd_premium_gb_hourly: 0.00015
+  
+  network:
+    loadbalancer_hourly: 0.034
+    ipv4_hourly: 0.003
+  
+  database:
+    dbaas_postgres_vcpu_hourly: 0.015
+    dbaas_postgres_ram_gb_hourly: 0.008
+    dbaas_postgres_storage_ssd_gb_hourly: 0.00015
+
+# Output preferences
+output:
+  default_format: table
+  show_breakdown: true
+  show_zero_cost_resources: false
+
+# Thresholds and alerts (future feature)
+thresholds:
+  monthly_warning: 1000.0
+  monthly_critical: 5000.0

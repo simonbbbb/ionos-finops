@@ -1,0 +1,43 @@
+name: Pricing Update Status
+
+on:
+  schedule:
+    # Run every 24 hours to check pricing status
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      check_status:
+        description: 'Check pricing API status'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  check-pricing-status:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+    
+    - name: Check IONOS API Status
+      env:
+        IONOS_TOKEN: ${{ secrets.IONOS_TOKEN }}
+      run: |
+        python scripts/check_pricing_status.py
+    
+    - name: Validate Current Pricing
+      run: |
+        python scripts/manual_pricing_update.py --validate-only
