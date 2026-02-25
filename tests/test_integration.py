@@ -1,13 +1,14 @@
-import pytest
 import json
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import MagicMock, Mock, patch
 
-from ionos_finops.pricing.api import IonosPricingAPI, IonosAPIError
-from ionos_finops.pricing.data import PricingData
-from ionos_finops.pricing.calculator import CostCalculator
+import pytest
+
 from ionos_finops.parser.terraform import TerraformParser
+from ionos_finops.pricing.api import IonosAPIError, IonosPricingAPI
+from ionos_finops.pricing.calculator import CostCalculator
+from ionos_finops.pricing.data import PricingData
 
 
 class TestIonosAPIIntegration:

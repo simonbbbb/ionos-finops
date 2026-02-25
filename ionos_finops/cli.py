@@ -1,14 +1,15 @@
-import click
 import json
 import sys
 from pathlib import Path
-from typing import Optional, Any, Dict
+from typing import Any, Dict, Optional
+
+import click
 import yaml
 
-from ionos_finops.pricing.calculator import CostCalculator
-from ionos_finops.output.table import TableFormatter
-from ionos_finops.output.json import JSONFormatter
 from ionos_finops.output.html import HTMLFormatter
+from ionos_finops.output.json import JSONFormatter
+from ionos_finops.output.table import TableFormatter
+from ionos_finops.pricing.calculator import CostCalculator
 
 
 @click.group()
@@ -106,7 +107,7 @@ def update_pricing(api_token: Optional[str], region: str):
             click.echo("Set IONOS_TOKEN environment variable or use --api-token option", err=True)
             sys.exit(1)
 
-        from ionos_finops.pricing.api import IonosPricingAPI, IonosAPIError
+        from ionos_finops.pricing.api import IonosAPIError, IonosPricingAPI
 
         api = IonosPricingAPI(api_token)
         if not api.validate_api_token():
@@ -118,8 +119,8 @@ def update_pricing(api_token: Optional[str], region: str):
         pricing_data = api.get_all_pricing(region)
 
         # Save to cache
-        from pathlib import Path
         import json
+        from pathlib import Path
 
         cache_dir = Path.home() / ".ionos-finops" / "cache"
         cache_dir.mkdir(parents=True, exist_ok=True)

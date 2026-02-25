@@ -1,22 +1,22 @@
+from typing import Dict, Type
+
+from ionos_finops.resources.autoscaling import IonosAutoscalingGroup, IonosScalingPolicy
+from ionos_finops.resources.backup import IonosBackupPlan, IonosSnapshot
 from ionos_finops.resources.base import Resource
-from ionos_finops.resources.compute import IonosServer, IonosCube, IonosVCPU
-from ionos_finops.resources.storage import IonosVolume, IonosS3Bucket, IonosBackupUnit
-from ionos_finops.resources.network import IonosLoadBalancer, IonosIPBlock, IonosNIC, IonosFirewall
+from ionos_finops.resources.compute import IonosCube, IonosServer, IonosVCPU
 from ionos_finops.resources.database import IonosDBaaS
 from ionos_finops.resources.kubernetes import IonosK8SCluster, IonosK8SNodePool
-from ionos_finops.resources.networking import IonosLAN, IonosNATGateway, IonosCrossConnect
-from ionos_finops.resources.backup import IonosBackupPlan, IonosSnapshot
-from ionos_finops.resources.autoscaling import IonosAutoscalingGroup, IonosScalingPolicy
 from ionos_finops.resources.management import (
-    IonosUser,
-    IonosGroup,
-    IonosShare,
-    IonosImage,
     IonosContract,
+    IonosGroup,
+    IonosImage,
+    IonosShare,
+    IonosUser,
 )
-from ionos_finops.resources.s3 import IonosS3Key, IonosS3BucketPolicy
-
-from typing import Dict, Type
+from ionos_finops.resources.network import IonosFirewall, IonosIPBlock, IonosLoadBalancer, IonosNIC
+from ionos_finops.resources.networking import IonosCrossConnect, IonosLAN, IonosNATGateway
+from ionos_finops.resources.s3 import IonosS3BucketPolicy, IonosS3Key
+from ionos_finops.resources.storage import IonosBackupUnit, IonosS3Bucket, IonosVolume
 
 RESOURCE_REGISTRY: Dict[str, Type[Resource]] = {
     # Compute

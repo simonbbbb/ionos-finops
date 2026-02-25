@@ -1,4 +1,5 @@
 import pytest
+
 from ionos_finops.pricing.data import PricingData
 
 

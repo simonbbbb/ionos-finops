@@ -1,4 +1,5 @@
 import pytest
+
 from ionos_finops.pricing.calculator import CostCalculator
 from ionos_finops.resources.compute import IonosServer
 
