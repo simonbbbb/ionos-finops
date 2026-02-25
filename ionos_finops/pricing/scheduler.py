@@ -171,7 +171,6 @@ _scheduler_instance: Optional[PricingScheduler] = None
 
 def get_scheduler() -> Optional[PricingScheduler]:
     """Get the global scheduler instance"""
-    global _scheduler_instance
     return _scheduler_instance
 
 
