@@ -11,56 +11,58 @@ from ionos_finops.pricing.calculator import CostCalculator
 from ionos_finops.pricing.data import PricingData
 
 
-class TestIonosAPIIntegration:
-    """Integration tests for IONOS API functionality"""
+@pytest.fixture
+def mock_api_response():
+    """Mock API response data"""
+    return {
+        "region": "de/fra",
+        "currency": "EUR",
+        "last_updated": "2026-02-25T10:00:00",
+        "source": "https://api.ionos.com/cloudapi/v6/pricing",
+        "compute": {"vcpu_hourly": 0.012, "ram_gb_hourly": 0.006},
+        "storage": {"storage_ssd_gb_hourly": 0.00012, "s3_storage_gb_monthly": 0.025},
+        "network": {"loadbalancer_hourly": 0.035, "ipv4_hourly": 0.004},
+        "database": {
+            "dbaas_postgres_vcpu_hourly": 0.018,
+            "dbaas_postgres_ram_gb_hourly": 0.009,
+        },
+        "kubernetes": {
+            "k8s_control_plane_hourly": 0.0,
+            "k8s_node_vcpu_hourly": 0.012,
+            "k8s_node_ram_gb_hourly": 0.006,
+        },
+    }
 
-    @pytest.fixture
-    def mock_api_response(self):
-        """Mock API response data"""
-        return {
-            "region": "de/fra",
-            "currency": "EUR",
-            "last_updated": "2026-02-25T10:00:00",
-            "source": "https://api.ionos.com/cloudapi/v6/pricing",
-            "compute": {"vcpu_hourly": 0.012, "ram_gb_hourly": 0.006},
-            "storage": {"storage_ssd_gb_hourly": 0.00012, "s3_storage_gb_monthly": 0.025},
-            "network": {"loadbalancer_hourly": 0.035, "ipv4_hourly": 0.004},
-            "database": {
-                "dbaas_postgres_vcpu_hourly": 0.018,
-                "dbaas_postgres_ram_gb_hourly": 0.009,
-            },
-            "kubernetes": {
-                "k8s_control_plane_hourly": 0.0,
-                "k8s_node_vcpu_hourly": 0.012,
-                "k8s_node_ram_gb_hourly": 0.006,
-            },
-        }
 
-    @pytest.fixture
-    def sample_terraform_config(self):
-        """Sample Terraform configuration for testing"""
-        return """
-        resource "ionos_server" "web" {
-            name = "web-server"
-            cores = 2
-            ram = 4096
-            volume {
-                name = "system"
-                size = 50
-                disk_type = "SSD"
-            }
-        }
-        
-        resource "ionos_volume" "data" {
-            name = "data-volume"
-            size = 100
+@pytest.fixture
+def sample_terraform_config():
+    """Sample Terraform configuration for testing"""
+    return """
+    resource "ionos_server" "web" {
+        name = "web-server"
+        cores = 2
+        ram = 4096
+        volume {
+            name = "system"
+            size = 50
             disk_type = "SSD"
         }
-        
-        resource "ionos_loadbalancer" "main" {
-            name = "main-lb"
-        }
-        """
+    }
+    
+    resource "ionos_volume" "data" {
+        name = "data-volume"
+        size = 100
+        disk_type = "SSD"
+    }
+    
+    resource "ionos_loadbalancer" "main" {
+        name = "main-lb"
+    }
+    """
+
+
+class TestIonosAPIIntegration:
+    """Integration tests for IONOS API functionality"""
 
     def test_api_initialization_with_token(self):
         """Test API initialization with token"""
@@ -76,72 +78,51 @@ class TestIonosAPIIntegration:
 
     def test_api_token_validation_success(self, mock_api_response):
         """Test successful API token validation"""
-        with patch("requests.Session.get") as mock_get:
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = [{"id": "de/fra", "name": "Frankfurt"}]
-            mock_get.return_value = mock_response
+        with patch.object(IonosPricingAPI, "_make_request") as mock_request:
+            mock_request.return_value = [{"id": "de/fra", "name": "Frankfurt"}]
 
             api = IonosPricingAPI(api_token="valid-token")
             assert api.validate_api_token() is True
 
     def test_api_token_validation_failure(self):
         """Test API token validation failure"""
-        with patch("requests.Session.get") as mock_get:
-            mock_response = Mock()
-            mock_response.status_code = 401
-            mock_response.raise_for_status.side_effect = Exception("Unauthorized")
-            mock_get.return_value = mock_response
+        with patch.object(IonosPricingAPI, "_make_request") as mock_request:
+            mock_request.side_effect = Exception("Unauthorized")
 
             api = IonosPricingAPI(api_token="invalid-token")
             assert api.validate_api_token() is False
 
     def test_get_server_pricing_success(self, mock_api_response):
-        """Test successful server pricing fetch"""
-        with patch("requests.Session.get") as mock_get:
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = mock_api_response["compute"]
-            mock_get.return_value = mock_response
+        """Test successful server pricing fetch - uses fallback pricing"""
+        api = IonosPricingAPI(api_token="test-token")
+        pricing = api.get_server_pricing("de/fra")
 
-            api = IonosPricingAPI(api_token="test-token")
-            pricing = api.get_server_pricing("de/fra")
-
-            assert pricing["vcpu_hourly"] == 0.012
-            assert pricing["ram_gb_hourly"] == 0.006
+        # API returns fallback pricing since IONOS doesn't have public pricing API
+        assert "vcpu_hourly" in pricing
+        assert "ram_gb_hourly" in pricing
+        assert pricing["vcpu_hourly"] > 0
+        assert pricing["ram_gb_hourly"] > 0
 
     def test_get_server_pricing_fallback(self):
         """Test server pricing fallback when API fails"""
-        with patch("requests.Session.get") as mock_get:
-            mock_response = Mock()
-            mock_response.status_code = 404
-            mock_response.raise_for_status.side_effect = Exception("Not found")
-            mock_get.return_value = mock_response
+        api = IonosPricingAPI(api_token="test-token")
+        pricing = api.get_server_pricing("de/fra")
 
-            api = IonosPricingAPI(api_token="test-token")
-            pricing = api.get_server_pricing("de/fra")
-
-            # Should return default fallback pricing
-            assert pricing["vcpu_hourly"] == 0.01
-            assert pricing["ram_gb_hourly"] == 0.005
+        # Should return default fallback pricing
+        assert pricing["vcpu_hourly"] == 0.01
+        assert pricing["ram_gb_hourly"] == 0.005
 
     def test_get_all_pricing_integration(self, mock_api_response):
         """Test complete pricing data fetch"""
-        with patch("requests.Session.get") as mock_get:
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = mock_api_response
-            mock_get.return_value = mock_response
+        api = IonosPricingAPI(api_token="test-token")
+        pricing_data = api.get_all_pricing("de/fra")
 
-            api = IonosPricingAPI(api_token="test-token")
-            pricing_data = api.get_all_pricing("de/fra")
-
-            assert pricing_data["region"] == "de/fra"
-            assert "compute" in pricing_data
-            assert "storage" in pricing_data
-            assert "network" in pricing_data
-            assert "database" in pricing_data
-            assert "kubernetes" in pricing_data
+        assert pricing_data["region"] == "de/fra"
+        assert "compute" in pricing_data
+        assert "storage" in pricing_data
+        assert "network" in pricing_data
+        assert "database" in pricing_data
+        assert "kubernetes" in pricing_data
 
 
 class TestPricingDataIntegration:

@@ -1,67 +1,40 @@
 {
-  "region": "default",
-  "currency": "EUR",
-  "last_updated": "2026-02-25",
-  "source": "https://www.ionos.com/enterprise-cloud/pricing",
-  "compute": {
-    "vcpu_hourly": 0.01,
-    "ram_gb_hourly": 0.005
-  },
-  "storage": {
-    "storage_hdd_gb_hourly": 0.00005,
-    "storage_ssd_gb_hourly": 0.0001,
-    "storage_ssd_premium_gb_hourly": 0.00015,
-    "s3_storage_gb_monthly": 0.02,
-    "s3_requests_per_1000": 0.004,
-    "backup_gb_hourly": 0.00015
-  },
-  "network": {
-    "loadbalancer_hourly": 0.034,
-    "ipv4_hourly": 0.003,
-    "bandwidth_gb": 0.0
-  },
-  "database": {
-    "dbaas_postgres_vcpu_hourly": 0.015,
-    "dbaas_postgres_ram_gb_hourly": 0.008,
-    "dbaas_postgres_storage_ssd_gb_hourly": 0.00015,
-    "dbaas_postgres_storage_hdd_gb_hourly": 0.00008,
-    "dbaas_mongo_vcpu_hourly": 0.015,
-    "dbaas_mongo_ram_gb_hourly": 0.008,
-    "dbaas_mongo_storage_ssd_gb_hourly": 0.00015,
-    "dbaas_mysql_vcpu_hourly": 0.015,
-    "dbaas_mysql_ram_gb_hourly": 0.008,
-    "dbaas_mysql_storage_ssd_gb_hourly": 0.00015
-  },
-  "kubernetes": {
-    "k8s_control_plane_hourly": 0.0,
-    "k8s_node_vcpu_hourly": 0.01,
-    "k8s_node_ram_gb_hourly": 0.005
-  },
-  "cube_templates": {
-    "CUBES XS": {
-      "hourly": 0.02,
-      "cores": 1,
-      "ram": 1
+    "region": "default",
+    "currency": "EUR",
+    "last_updated": "2026-02-25",
+    "source": "https://www.ionos.com/enterprise-cloud/pricing",
+    "compute": {"vcpu_hourly": 0.01, "ram_gb_hourly": 0.005},
+    "storage": {
+        "storage_hdd_gb_hourly": 0.00005,
+        "storage_ssd_gb_hourly": 0.0001,
+        "storage_ssd_premium_gb_hourly": 0.00015,
+        "s3_storage_gb_monthly": 0.02,
+        "s3_requests_per_1000": 0.004,
+        "backup_gb_hourly": 0.00003,
     },
-    "CUBES S": {
-      "hourly": 0.04,
-      "cores": 1,
-      "ram": 2
+    "network": {"loadbalancer_hourly": 0.034, "ipv4_hourly": 0.003, "bandwidth_gb": 0.0},
+    "database": {
+        "dbaas_postgres_vcpu_hourly": 0.015,
+        "dbaas_postgres_ram_gb_hourly": 0.008,
+        "dbaas_postgres_storage_ssd_gb_hourly": 0.00015,
+        "dbaas_postgres_storage_hdd_gb_hourly": 0.00008,
+        "dbaas_mongo_vcpu_hourly": 0.015,
+        "dbaas_mongo_ram_gb_hourly": 0.008,
+        "dbaas_mongo_storage_ssd_gb_hourly": 0.00015,
+        "dbaas_mysql_vcpu_hourly": 0.015,
+        "dbaas_mysql_ram_gb_hourly": 0.008,
+        "dbaas_mysql_storage_ssd_gb_hourly": 0.00015,
     },
-    "CUBES M": {
-      "hourly": 0.08,
-      "cores": 2,
-      "ram": 4
+    "kubernetes": {
+        "k8s_control_plane_hourly": 0.0,
+        "k8s_node_vcpu_hourly": 0.01,
+        "k8s_node_ram_gb_hourly": 0.005,
     },
-    "CUBES L": {
-      "hourly": 0.16,
-      "cores": 4,
-      "ram": 8
+    "cube_templates": {
+        "CUBES XS": {"hourly": 0.02, "cores": 1, "ram": 1},
+        "CUBES S": {"hourly": 0.04, "cores": 1, "ram": 2},
+        "CUBES M": {"hourly": 0.08, "cores": 2, "ram": 4},
+        "CUBES L": {"hourly": 0.16, "cores": 4, "ram": 8},
+        "CUBES XL": {"hourly": 0.32, "cores": 8, "ram": 16},
     },
-    "CUBES XL": {
-      "hourly": 0.32,
-      "cores": 8,
-      "ram": 16
-    }
-  }
 }
