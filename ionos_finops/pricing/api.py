@@ -15,27 +15,30 @@ class IonosAPIError(Exception):
 class IonosPricingAPI:
     """
     IONOS API client with realistic limitations.
-    
+
     IMPORTANT: IONOS does not provide a public pricing API.
     This class provides fallback functionality and documentation
     of the actual API limitations.
     """
-    
-    def __init__(self, api_token: Optional[str] = None, api_url: str = "https://api.ionos.com/cloudapi/v6"):
+
+    def __init__(
+        self, api_token: Optional[str] = None, api_url: str = "https://api.ionos.com/cloudapi/v6"
+    ):
         self.api_url = api_url
         self.api_token = api_token or os.getenv("IONOS_TOKEN")
         self.session = requests.Session()
-        
+
         if self.api_token:
-            self.session.headers.update({
-                "Authorization": f"Bearer {self.api_token}",
-                "Content-Type": "application/json"
-            })
-    
-    def _make_request(self, endpoint: str, method: str = "GET", data: Optional[Dict] = None) -> Dict[str, Any]:
+            self.session.headers.update(
+                {"Authorization": f"Bearer {self.api_token}", "Content-Type": "application/json"}
+            )
+
+    def _make_request(
+        self, endpoint: str, method: str = "GET", data: Optional[Dict] = None
+    ) -> Dict[str, Any]:
         """Make API request with proper error handling"""
         url = f"{self.api_url}/{endpoint}"
-        
+
         try:
             response = self.session.request(method, url, json=data)
             response.raise_for_status()
@@ -43,11 +46,11 @@ class IonosPricingAPI:
         except requests.exceptions.RequestException as e:
             logger.error(f"API request failed: {e}")
             raise IonosAPIError(f"Failed to fetch data from IONOS API: {e}")
-    
+
     def get_locations(self) -> List[Dict[str, Any]]:
         """
         Get available IONOS data center locations.
-        
+
         Note: This endpoint requires authentication and returns
         account-specific information, not a public catalog.
         """
@@ -67,66 +70,66 @@ class IonosPricingAPI:
                 {"id": "us/ewr", "name": "Newark", "country": "United States"},
                 {"id": "us/kc", "name": "Lenexa", "country": "United States"},
             ]
-    
+
     def get_server_pricing(self, location: str) -> Dict[str, Any]:
         """
         Get server pricing for a specific location.
-        
+
         NOTE: IONOS does not provide a public pricing API.
         This method always returns fallback pricing.
         """
         logger.warning(f"IONOS pricing API not available. Using fallback pricing for {location}")
         return self._get_fallback_pricing()
-    
+
     def get_storage_pricing(self, location: str) -> Dict[str, Any]:
         """
         Get storage pricing for a specific location.
-        
+
         NOTE: IONOS does not provide a public pricing API.
         This method always returns fallback pricing.
         """
         logger.warning(f"IONOS pricing API not available. Using fallback pricing for {location}")
         return self._get_fallback_pricing()
-    
+
     def get_network_pricing(self, location: str) -> Dict[str, Any]:
         """
         Get network pricing for a specific location.
-        
+
         NOTE: IONOS does not provide a public pricing API.
         This method always returns fallback pricing.
         """
         logger.warning(f"IONOS pricing API not available. Using fallback pricing for {location}")
         return self._get_fallback_pricing()
-    
+
     def get_database_pricing(self, location: str) -> Dict[str, Any]:
         """
         Get database pricing for a specific location.
-        
+
         NOTE: IONOS does not provide a public pricing API.
         This method always returns fallback pricing.
         """
         logger.warning(f"IONOS pricing API not available. Using fallback pricing for {location}")
         return self._get_fallback_pricing()
-    
+
     def get_kubernetes_pricing(self, location: str) -> Dict[str, Any]:
         """
         Get Kubernetes pricing for a specific location.
-        
+
         NOTE: IONOS does not provide a public pricing API.
         This method always returns fallback pricing.
         """
         logger.warning(f"IONOS pricing API not available. Using fallback pricing for {location}")
         return self._get_fallback_pricing()
-    
+
     def get_all_pricing(self, location: str) -> Dict[str, Any]:
         """
         Get all pricing data for a specific location.
-        
+
         NOTE: IONOS does not provide a public pricing API.
         This method returns structured fallback pricing.
         """
         logger.info(f"Using fallback pricing data for {location}")
-        
+
         pricing_data = {
             "region": location,
             "currency": self._get_currency_for_region(location),
@@ -137,20 +140,13 @@ class IonosPricingAPI:
             "network": self._get_fallback_pricing(),
             "database": self._get_fallback_pricing(),
             "kubernetes": self._get_fallback_pricing(),
-            "backup": {
-                "backup_plan_base_monthly": 5.0,
-                "backup_gb_hourly": 0.00015
-            },
-            "autoscaling": {
-                "autoscaling_monthly_fee": 0.0
-            },
-            "management": {
-                "image_storage_gb_hourly": 0.00005
-            }
+            "backup": {"backup_plan_base_monthly": 5.0, "backup_gb_hourly": 0.00015},
+            "autoscaling": {"autoscaling_monthly_fee": 0.0},
+            "management": {"image_storage_gb_hourly": 0.00005},
         }
-        
+
         return pricing_data
-    
+
     def _get_fallback_pricing(self) -> Dict[str, Any]:
         """Get fallback pricing data based on typical IONOS pricing"""
         return {
@@ -185,23 +181,29 @@ class IonosPricingAPI:
             "k8s_node_vcpu_hourly": 0.01,
             "k8s_node_ram_gb_hourly": 0.005,
             "k8s_node_storage_ssd_gb_hourly": 0.0001,
-            "k8s_node_storage_hdd_gb_hourly": 0.00005
+            "k8s_node_storage_hdd_gb_hourly": 0.00005,
         }
-    
+
     def _get_currency_for_region(self, region: str) -> str:
         """Get currency code for a specific region"""
         currencies = {
-            "de/fra": "EUR", "de/ber": "EUR", "de/fra2": "EUR",
-            "gb/lhr": "GBP", "gb/wor": "GBP",
-            "fr/par": "EUR", "es/log": "EUR",
-            "us/las": "USD", "us/ewr": "USD", "us/kc": "USD"
+            "de/fra": "EUR",
+            "de/ber": "EUR",
+            "de/fra2": "EUR",
+            "gb/lhr": "GBP",
+            "gb/wor": "GBP",
+            "fr/par": "EUR",
+            "es/log": "EUR",
+            "us/las": "USD",
+            "us/ewr": "USD",
+            "us/kc": "USD",
         }
         return currencies.get(region, "EUR")
-    
+
     def validate_api_token(self) -> bool:
         """
         Validate API token by making a test request.
-        
+
         Note: This will only work with valid IONOS credentials
         for account-specific APIs, not pricing APIs.
         """
@@ -210,11 +212,11 @@ class IonosPricingAPI:
             return True
         except IonosAPIError:
             return False
-    
+
     def get_pricing_api_status(self) -> Dict[str, Any]:
         """
         Get the status of IONOS pricing API availability.
-        
+
         Returns information about API limitations and alternatives.
         """
         return {
@@ -224,14 +226,14 @@ class IonosPricingAPI:
                 "IONOS does not provide a public pricing API",
                 "Pricing only available via website calculator (requires login)",
                 "Account-specific billing data available with authentication",
-                "No programmatic access to standard pricing catalog"
+                "No programmatic access to standard pricing catalog",
             ],
             "alternatives": [
                 "Manual pricing updates from website",
                 "Community-driven pricing contributions",
                 "Web scraping (may violate terms of service)",
-                "Partnership with IONOS for API access"
+                "Partnership with IONOS for API access",
             ],
             "current_implementation": "fallback_pricing_data",
-            "recommendation": "Manual pricing updates with community validation"
+            "recommendation": "Manual pricing updates with community validation",
         }

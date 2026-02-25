@@ -5,10 +5,10 @@ from jinja2 import Template
 class HTMLFormatter:
     def __init__(self):
         self.template = self._get_template()
-    
+
     def format(self, summary: Dict[str, Any]) -> str:
         return self.template.render(summary=summary)
-    
+
     def _get_template(self) -> Template:
         template_str = """
 <!DOCTYPE html>
