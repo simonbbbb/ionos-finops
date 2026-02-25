@@ -34,7 +34,7 @@ class PricingData:
 
         if pricing_file and pricing_file.exists():
             with open(pricing_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
+                data: Dict[str, Any] = json.load(f)
         else:
             data = self._get_default_pricing()
 
@@ -163,8 +163,11 @@ class PricingData:
 
         return pricing
 
-    def get_category_pricing(self, category: str) -> Dict[str, float]:
-        return self.pricing_data.get(category, {})
+    def get_category_pricing(self, category: str) -> Dict[str, Any]:
+        result: Dict[str, Any] = self.pricing_data.get(category, {})
+        if not isinstance(result, dict):
+            return {}
+        return result
 
     def update_pricing(self, api_token: str) -> bool:
         """Manually update pricing from API"""

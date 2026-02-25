@@ -63,14 +63,14 @@ def breakdown(
         summary = calculator.get_summary()
 
         if format == "table":
-            formatter = TableFormatter()
-            result = formatter.format(summary)
+            table_formatter = TableFormatter()
+            result = table_formatter.format(summary)
         elif format == "json":
-            formatter = JSONFormatter()
-            result = formatter.format(summary)
+            json_formatter = JSONFormatter()
+            result = json_formatter.format(summary)
         elif format == "html":
-            formatter = HTMLFormatter()
-            result = formatter.format(summary)
+            html_formatter = HTMLFormatter()
+            result = html_formatter.format(summary)
         else:
             result = str(summary)
 

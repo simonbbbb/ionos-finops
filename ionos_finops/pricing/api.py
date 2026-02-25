@@ -42,7 +42,8 @@ class IonosPricingAPI:
         try:
             response = self.session.request(method, url, json=data)
             response.raise_for_status()
-            return response.json()
+            result: Dict[str, Any] = response.json()
+            return result
         except requests.exceptions.RequestException as e:
             logger.error(f"API request failed: {e}")
             raise IonosAPIError(f"Failed to fetch data from IONOS API: {e}")
@@ -58,7 +59,7 @@ class IonosPricingAPI:
             return self._make_request("locations")
         except IonosAPIError:
             # Fallback to known locations
-            return [
+            fallback: List[Dict[str, Any]] = [
                 {"id": "de/fra", "name": "Frankfurt", "country": "Germany"},
                 {"id": "de/ber", "name": "Berlin", "country": "Germany"},
                 {"id": "de/fra2", "name": "Frankfurt 2", "country": "Germany"},
@@ -70,6 +71,7 @@ class IonosPricingAPI:
                 {"id": "us/ewr", "name": "Newark", "country": "United States"},
                 {"id": "us/kc", "name": "Lenexa", "country": "United States"},
             ]
+            return fallback
 
     def get_server_pricing(self, location: str) -> Dict[str, Any]:
         """

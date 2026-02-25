@@ -16,7 +16,9 @@ from ionos_finops.resources.management import (
 )
 from ionos_finops.resources.s3 import IonosS3Key, IonosS3BucketPolicy
 
-RESOURCE_REGISTRY = {
+from typing import Dict, Type
+
+RESOURCE_REGISTRY: Dict[str, Type[Resource]] = {
     # Compute
     "ionos_server": IonosServer,
     "ionos_cube_server": IonosCube,

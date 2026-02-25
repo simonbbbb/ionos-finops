@@ -95,7 +95,7 @@ class IonosBillingAPI:
             response = self.session.get(url, params=params)
             response.raise_for_status()
 
-            data = response.json()
+            data: Dict[str, Any] = response.json()
             logger.info(f"Successfully fetched {len(data.get('products', []))} products")
             return data
 
@@ -108,7 +108,8 @@ class IonosBillingAPI:
         try:
             response = self.session.get(f"{self.base_url}/profile")
             response.raise_for_status()
-            return response.json()
+            result: Dict[str, Any] = response.json()
+            return result
         except requests.exceptions.RequestException as e:
             logger.error(f"Failed to fetch profile: {e}")
             raise IonosBillingAPIError(f"Failed to fetch profile: {e}")
@@ -122,7 +123,7 @@ class IonosBillingAPI:
         products = products_data.get("products", [])
 
         # Initialize pricing structure
-        pricing = {
+        pricing: Dict[str, Dict[str, float]] = {
             "compute": {},
             "storage": {},
             "network": {},
