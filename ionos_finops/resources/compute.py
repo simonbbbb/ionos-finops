@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, cast
 
 from ionos_finops.resources.base import Resource
 
@@ -40,9 +40,9 @@ class IonosCube(Resource):
     def calculate_cost(self) -> Dict[str, Any]:
         template_id = self.config.get("template_uuid", "")
 
-        cube_templates_raw: Dict[str, Any] = self.pricing.get("cube_templates", {})
-        cube_templates: Dict[str, Any] = (
-            cube_templates_raw if isinstance(cube_templates_raw, dict) else {}
+        cube_templates: Dict[str, Any] = cast(
+            Dict[str, Any],
+            self.pricing.get("cube_templates", {}),
         )
         template_cost = cube_templates.get(template_id, {})
         if not isinstance(template_cost, dict):
