@@ -28,7 +28,7 @@ class TestPricingValidation:
                 "storage_ssd_premium_gb_hourly": 0.00015,
                 "s3_storage_gb_monthly": 0.02,
                 "s3_requests_per_1000": 0.004,
-                "backup_gb_hourly": 0.00015,
+                "backup_gb_hourly": 0.00003,
                 "snapshot_gb_hourly": 0.00008,
             },
             "network": {
