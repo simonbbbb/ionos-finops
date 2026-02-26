@@ -1,8 +1,5 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
   - name: IONOS Cloud Support
     url: https://www.ionos.com/help
     about: For official IONOS Cloud technical support and billing issues
-  - name: IONOS Community
-    url: https://community.ionos.com/
-    about: For general IONOS questions and community discussions
