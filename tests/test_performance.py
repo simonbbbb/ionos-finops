@@ -21,22 +21,22 @@ class TestPerformanceBenchmarks:
             resources.append(
                 f'resource "ionos_server" "web_{i}" {{\n'
                 f'    name = "web-server-{i}"\n'
-                f'    cores = 2\n'
-                f'    ram = 4096\n'
-                f'    volume {{\n'
+                f"    cores = 2\n"
+                f"    ram = 4096\n"
+                f"    volume {{\n"
                 f'        name = "system-{i}"\n'
-                f'        size = 50\n'
+                f"        size = 50\n"
                 f'        disk_type = "SSD"\n'
-                f'    }}\n'
-                f'}}\n'
+                f"    }}\n"
+                f"}}\n"
             )
         for i in range(10):
             resources.append(
                 f'resource "ionos_volume" "data_{i}" {{\n'
                 f'    name = "data-volume-{i}"\n'
-                f'    size = 100\n'
+                f"    size = 100\n"
                 f'    disk_type = "SSD"\n'
-                f'}}\n'
+                f"}}\n"
             )
         return "\n".join(resources)
 
