@@ -1,9 +1,12 @@
 # IONOS FinOps
 
+[![PyPI version](https://badge.fury.io/py/ionos-finops.svg)](https://badge.fury.io/py/ionos-finops)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
 **IONOS FinOps** is an open-source cost estimation tool for IONOS Cloud infrastructure defined in Terraform. Similar to Infracost but specifically designed for IONOS, it provides 100% accurate pricing calculations for your infrastructure before deployment.
+
+📦 **Published on PyPI**: https://pypi.org/project/ionos-finops/
 
 ## Features
 
@@ -26,7 +29,7 @@
 
 ## Installation
 
-### From PyPI (when published)
+### From PyPI (Recommended)
 
 ```bash
 pip install ionos-finops
@@ -35,7 +38,7 @@ pip install ionos-finops
 ### From Source
 
 ```bash
-git clone https://github.com/yourusername/ionos-finops.git
+git clone https://github.com/simonbbbb/ionos-finops.git
 cd ionos-finops
 pip install -e .
 ```
@@ -165,7 +168,7 @@ ionos-cost-estimate:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ionos-finops.git
+git clone https://github.com/simonbbbb/ionos-finops.git
 cd ionos-finops
 
 # Create virtual environment
@@ -324,9 +327,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- 📖 [Documentation](https://github.com/yourusername/ionos-finops/wiki)
-- 🐛 [Issue Tracker](https://github.com/yourusername/ionos-finops/issues)
-- 💬 [Discussions](https://github.com/yourusername/ionos-finops/discussions)
+- 📖 [Documentation](https://github.com/simonbbbb/ionos-finops/wiki)
+- 🐛 [Issue Tracker](https://github.com/simonbbbb/ionos-finops/issues)
+- 💬 [Discussions](https://github.com/simonbbbb/ionos-finops/discussions)
 
 ## Related Projects
 
